@@ -1,6 +1,11 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig({
-  // Para um repositório comum do GitHub Pages, ajuste para: base: '/nome-do-repositorio/',
-  // Para https://usuario.github.io/ (repositório especial), mantenha o padrão.
-});
+// GitHub Actions define GITHUB_REPOSITORY como "usuario/nome-do-repositorio".
+// Isso configura automaticamente o caminho correto para projetos no GitHub Pages.
+// Para um repositório usuario.github.io, o site fica na raiz do domínio.
+const repository = process.env.GITHUB_REPOSITORY?.split('/')[1];
+const base = repository && !repository.endsWith('.github.io')
+  ? `/${repository}/`
+  : '/';
+
+export default defineConfig({ base });

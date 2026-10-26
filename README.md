@@ -26,7 +26,7 @@ npm run preview
 3. O workflow `.github/workflows/pages.yml` roda testes, faz o build e publica no Pages somente se os testes passarem.
 
 ### Caminho de publicação do Vite
-Se o repositório for `https://USUARIO.github.io/NOME-DO-REPOSITORIO/`, edite `vite.config.js` e configure `base: '/NOME-DO-REPOSITORIO/'`. Para um repositório especial chamado `USUARIO.github.io`, o caminho padrão `/` funciona.
+O `vite.config.js` detecta automaticamente o nome do repositório durante o build no GitHub Actions e configura o `base` correto para o GitHub Pages. Para builds locais, o padrão é `/`.
 
 ## Arquitetura
 - `src/models/`: estado e regras de colocação de blocos.

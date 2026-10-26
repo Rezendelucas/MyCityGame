@@ -38,6 +38,6 @@ test('cada colocação sorteia a próxima cor', () => {
 
 test('rejeita células fora do tabuleiro', () => {
   const model = new GameModel();
-  assert.equal(model.placeBlock({ col: 20, row: 0 }), false);
+  assert.equal(model.placeBlock({ col: 40, row: 0 }), false);
   assert.equal(model.getState().placedCount, 0);
 });

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { GameModel } from '../src/models/GameModel.js';
 
 test('começa sem blocos colocados', () => {
-  const model = new GameModel({ columns: 10, rows: 10 });
+  const model = new GameModel({ columns: 30, rows: 30 });
   assert.equal(model.getState().placedCount, 0);
 });
 

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10151f" />
+    <meta name="description" content="Protótipo de jogo web com arquitetura MVC." />
+    <title>Browser Game — MVP</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">PROJETO EXPERIMENTAL</p>
+          <h1>Browser Game</h1>
+        </div>
+        <span class="status-pill"><span class="status-dot"></span> MVP web</span>
+      </header>
+
+      <section class="hero panel" aria-labelledby="game-title">
+        <div class="hero-copy">
+          <p class="eyebrow">PRIMEIRO PROTÓTIPO</p>
+          <h2 id="game-title">Construa. Teste. Evolua.</h2>
+          <p class="intro">Uma base simples para desenvolver o jogo no navegador, com a lógica separada da interface.</p>
+        </div>
+        <div class="score-card" aria-live="polite">
+          <span class="score-label">PONTUAÇÃO</span>
+          <strong id="score-value">0</strong>
+          <span id="score-message" class="score-message">Faça seu primeiro ponto.</span>
+        </div>
+      </section>
+
+      <section class="panel game-panel" aria-labelledby="actions-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">ÁREA DE TESTE</p>
+            <h2 id="actions-title">Central de ações</h2>
+          </div>
+          <span id="game-status" class="muted">Pronto para jogar</span>
+        </div>
+        <p class="body-copy">Use os controles para validar o ciclo básico do jogo. Depois, podemos trocar este protótipo pela mecânica econômica que você quiser desenvolver.</p>
+        <div class="actions">
+          <button id="add-point-button" class="button button-primary" type="button">+ Ganhar ponto</button>
+          <button id="reset-button" class="button button-secondary" type="button">Reiniciar</button>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>JavaScript · Vite · MVC</span>
+        <span>Web primeiro; outras plataformas depois.</span>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

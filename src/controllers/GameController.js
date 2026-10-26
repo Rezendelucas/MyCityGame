@@ -1,5 +1,5 @@
 /**
- * Controller: conecta as ações do usuário às regras e atualiza a View.
+ * Controller: conecta os eventos de entrada ao estado e à interface.
  */
 export class GameController {
   constructor(model, view) {
@@ -8,16 +8,26 @@ export class GameController {
   }
 
   init() {
-    this.view.bindAddPoint(() => this.addPoint());
-    this.view.bindReset(() => this.reset());
+    this.view.bindStart(() => {
+      this.view.showGame();
+      this.view.render(this.model.getState());
+    });
+    this.view.bindHome(() => this.view.showStart());
+    this.view.bindPointerMove((cell) => {
+      this.model.setHoveredCell(cell);
+      this.view.render(this.model.getState());
+    });
+    this.view.bindPointerLeave(() => {
+      this.model.setHoveredCell(null);
+      this.view.render(this.model.getState());
+    });
+    this.view.bindBoardClick((cell) => {
+      if (!cell) return;
+      this.model.setHoveredCell(cell);
+      const placed = this.model.placeBlock(cell);
+      this.view.render(this.model.getState());
+      if (!placed) this.view.flashOccupied?.();
+    });
     this.view.render(this.model.getState());
-  }
-
-  addPoint() {
-    this.view.render(this.model.addPoint());
-  }
-
-  reset() {
-    this.view.render(this.model.reset());
   }
 }

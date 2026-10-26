@@ -2,25 +2,42 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { GameModel } from '../src/models/GameModel.js';
 
-test('começa com pontuação zero', () => {
-  const model = new GameModel();
-  assert.equal(model.getState().score, 0);
+test('começa sem blocos colocados', () => {
+  const model = new GameModel({ columns: 10, rows: 10 });
+  assert.equal(model.getState().placedCount, 0);
 });
 
-test('adiciona um ponto', () => {
+test('coloca um bloco na célula selecionada', () => {
   const model = new GameModel();
-  assert.equal(model.addPoint().score, 1);
+  assert.equal(model.placeBlock({ col: 2, row: 3 }), true);
+  assert.equal(model.getState().placedCount, 1);
+  assert.deepEqual(model.getState().blocks[0] && {
+    col: model.getState().blocks[0].col,
+    row: model.getState().blocks[0].row,
+  }, { col: 2, row: 3 });
 });
 
-test('reinicia a pontuação', () => {
+test('não permite colocar dois blocos na mesma célula', () => {
   const model = new GameModel();
-  model.addPoint();
-  model.addPoint();
-  assert.equal(model.reset().score, 0);
+  assert.equal(model.placeBlock({ col: 1, row: 1 }), true);
+  assert.equal(model.placeBlock({ col: 1, row: 1 }), false);
+  assert.equal(model.getState().placedCount, 1);
 });
 
-test('mensagem muda conforme a pontuação', () => {
+test('cada colocação sorteia a próxima cor', () => {
   const model = new GameModel();
-  model.addPoint();
-  assert.equal(model.getState().message, 'Boa! O jogo está funcionando.');
+  const firstColor = model.getState().nextColor;
+  model.placeBlock({ col: 0, row: 0 });
+  const state = model.getState();
+  assert.equal(state.placedCount, 1);
+  assert.ok(state.blocks[0].color);
+  assert.ok(state.nextColor);
+  // A paleta contém várias cores; uma cor nova pode coincidir por acaso, então não exigimos diferença.
+  assert.ok(typeof firstColor === 'string');
+});
+
+test('rejeita células fora do tabuleiro', () => {
+  const model = new GameModel();
+  assert.equal(model.placeBlock({ col: 20, row: 0 }), false);
+  assert.equal(model.getState().placedCount, 0);
 });

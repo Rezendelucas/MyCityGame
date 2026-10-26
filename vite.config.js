@@ -1,9 +1,6 @@
 import { defineConfig } from 'vite';
 
-// Para um repositório comum (https://usuario.github.io/nome-repo/),
-// descomente e ajuste a linha abaixo:
-// base: '/nome-repo/',
-
 export default defineConfig({
-  // base: '/nome-repo/',
+  // Para um repositório comum do GitHub Pages, ajuste para: base: '/nome-do-repositorio/',
+  // Para https://usuario.github.io/ (repositório especial), mantenha o padrão.
 });

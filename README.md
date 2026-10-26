@@ -1,23 +1,19 @@
-# Browser Game MVC
+# Color Grid — Browser Game MVC
 
-MVP web de um jogo, construído com JavaScript, Vite e MVC. A versão web é a prioridade; a estrutura deixa a lógica principal independente para que Electron (desktop) e Capacitor (Android) possam ser adicionados depois.
+Protótipo web de um jogo de colocação de blocos em um tabuleiro isométrico. A versão web é o MVP; a lógica principal permanece independente de plataforma para permitir adicionar Electron (desktop) e Capacitor (Android) futuramente.
 
 ## Requisitos
-
 - Node.js 20.19+ ou 22.12+
 - npm
 
-## Rodar localmente
-
+## Executar localmente
 ```bash
 npm install
 npm run dev
 ```
+Abra o endereço local indicado pelo Vite.
 
-Abra o endereço local mostrado pelo Vite.
-
-## Testes e build
-
+## Testar e gerar build
 ```bash
 npm test
 npm run build
@@ -25,27 +21,19 @@ npm run preview
 ```
 
 ## Publicar no GitHub Pages
+1. Envie os arquivos para a branch `main` do repositório.
+2. Em **Settings → Pages → Build and deployment**, selecione **GitHub Actions**.
+3. O workflow `.github/workflows/pages.yml` roda testes, faz o build e publica no Pages somente se os testes passarem.
 
-1. Crie um repositório no GitHub e envie estes arquivos para a branch `main`.
-2. No repositório, entre em **Settings → Pages**.
-3. Em **Build and deployment → Source**, selecione **GitHub Actions**.
-4. A cada `push` na branch `main`, o workflow `.github/workflows/pages.yml` executa os testes, gera o build e publica no Pages apenas se os testes passarem.
-5. Acesse a URL indicada em **Settings → Pages** ou na execução do workflow.
-
-### Importante sobre URLs de repositório
-
-O Vite precisa saber se o site será publicado em `https://USUARIO.github.io/` ou em `https://USUARIO.github.io/NOME-DO-REPOSITORIO/`.
-
-- Para um repositório chamado `USUARIO.github.io`, o padrão `/` funciona.
-- Para qualquer outro repositório, abra `vite.config.js` e defina `base` como `'/NOME-DO-REPOSITORIO/'` antes de publicar.
+### Caminho de publicação do Vite
+Se o repositório for `https://USUARIO.github.io/NOME-DO-REPOSITORIO/`, edite `vite.config.js` e configure `base: '/NOME-DO-REPOSITORIO/'`. Para um repositório especial chamado `USUARIO.github.io`, o caminho padrão `/` funciona.
 
 ## Arquitetura
-
-- `src/models/`: estado e regras do jogo, sem dependência do DOM.
-- `src/views/`: renderização e eventos da interface.
-- `src/controllers/`: coordena Model e View.
-- `src/styles/`: estilos.
+- `src/models/`: estado e regras de colocação de blocos.
+- `src/views/`: telas e desenho do tabuleiro em Canvas.
+- `src/controllers/`: coordena eventos, estado e renderização.
+- `src/styles/`: estilos responsivos.
 - `tests/`: testes automatizados do Model.
-- `.github/workflows/pages.yml`: testes, build e deploy automático.
+- `.github/workflows/pages.yml`: testes, build e publicação automática.
 
-**Regra para manter portabilidade:** não coloque APIs do navegador, Electron ou Capacitor dentro do Model. Quando precisarmos de armazenamento, áudio, notificações ou recursos nativos, criaremos interfaces/serviços separados para cada plataforma.
+**Portabilidade:** mantenha as regras do jogo dentro de `models`. Recursos específicos de navegador, Electron ou Capacitor devem ser adicionados por serviços separados quando forem necessários.

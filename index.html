@@ -4,51 +4,55 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#10151f" />
-    <meta name="description" content="Protótipo de jogo web com arquitetura MVC." />
-    <title>Browser Game — MVP</title>
+    <meta name="description" content="Protótipo de jogo web com grid isométrico." />
+    <title>Color Grid — MVP</title>
   </head>
   <body>
     <main class="app-shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">PROJETO EXPERIMENTAL</p>
-          <h1>Browser Game</h1>
+      <section id="start-screen" class="screen start-screen" aria-labelledby="start-title">
+        <div class="start-content">
+          <div class="brand-mark" aria-hidden="true">▦</div>
+          <p class="eyebrow">PROTÓTIPO INTERATIVO</p>
+          <h1 id="start-title">Color Grid</h1>
+          <p class="start-description">Escolha uma célula, posicione seu bloco colorido e construa seu próprio mosaico.</p>
+          <button id="start-button" class="button button-primary button-large" type="button">Iniciar jogo <span aria-hidden="true">→</span></button>
+          <p class="start-hint">Use o mouse para escolher onde colocar cada bloco.</p>
         </div>
-        <span class="status-pill"><span class="status-dot"></span> MVP web</span>
-      </header>
-
-      <section class="hero panel" aria-labelledby="game-title">
-        <div class="hero-copy">
-          <p class="eyebrow">PRIMEIRO PROTÓTIPO</p>
-          <h2 id="game-title">Construa. Teste. Evolua.</h2>
-          <p class="intro">Uma base simples para desenvolver o jogo no navegador, com a lógica separada da interface.</p>
-        </div>
-        <div class="score-card" aria-live="polite">
-          <span class="score-label">PONTUAÇÃO</span>
-          <strong id="score-value">0</strong>
-          <span id="score-message" class="score-message">Faça seu primeiro ponto.</span>
+        <div class="start-decoration" aria-hidden="true">
+          <span class="deco-block block-a"></span>
+          <span class="deco-block block-b"></span>
+          <span class="deco-block block-c"></span>
+          <span class="deco-block block-d"></span>
+          <span class="deco-block block-e"></span>
         </div>
       </section>
 
-      <section class="panel game-panel" aria-labelledby="actions-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">ÁREA DE TESTE</p>
-            <h2 id="actions-title">Central de ações</h2>
+      <section id="game-screen" class="screen game-screen hidden" aria-label="Área do jogo">
+        <header class="game-header">
+          <div class="game-brand">
+            <button id="home-button" class="icon-button" type="button" aria-label="Voltar à tela inicial">←</button>
+            <div>
+              <p class="eyebrow">COLOR GRID</p>
+              <h1>Monte seu mosaico</h1>
+            </div>
           </div>
-          <span id="game-status" class="muted">Pronto para jogar</span>
-        </div>
-        <p class="body-copy">Use os controles para validar o ciclo básico do jogo. Depois, podemos trocar este protótipo pela mecânica econômica que você quiser desenvolver.</p>
-        <div class="actions">
-          <button id="add-point-button" class="button button-primary" type="button">+ Ganhar ponto</button>
-          <button id="reset-button" class="button button-secondary" type="button">Reiniciar</button>
-        </div>
-      </section>
+          <div class="game-stats"><span id="placed-count">0</span><span class="stats-caption">blocos colocados</span></div>
+        </header>
 
-      <footer class="footer">
-        <span>JavaScript · Vite · MVC</span>
-        <span>Web primeiro; outras plataformas depois.</span>
-      </footer>
+        <section class="board-wrap" aria-label="Tabuleiro isométrico">
+          <canvas id="game-canvas" aria-label="Tabuleiro em perspectiva. Mova o mouse para escolher uma célula e clique para colocar o bloco."></canvas>
+          <div class="board-tip"><span class="tip-dot"></span> Passe o mouse sobre uma célula e clique para colocar</div>
+        </section>
+
+        <aside class="next-piece" aria-label="Próximo bloco">
+          <div class="next-piece-copy">
+            <span class="eyebrow">PRÓXIMO BLOCO</span>
+            <strong>Bloco colorido</strong>
+            <span class="next-piece-hint">Clique no tabuleiro para posicionar</span>
+          </div>
+          <div id="next-piece-swatch" class="piece-swatch" aria-label="Cor do próximo bloco"></div>
+        </aside>
+      </section>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>

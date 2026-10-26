@@ -12,7 +12,7 @@ function randomColor() {
  * Model: estado e regras do jogo, sem dependência de DOM ou plataforma.
  */
 export class GameModel {
-  constructor({ columns = 10, rows = 10 } = {}) {
+  constructor({ columns = 30, rows = 30 } = {}) {
     this.columns = columns;
     this.rows = rows;
     this.placedBlocks = new Map();

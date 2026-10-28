@@ -1,58 +1,38 @@
-const PALETTE = [
-  '#ff6b6b', '#ff9f43', '#ffd166', '#06d6a0',
-  '#4ecdc4', '#45aaf2', '#5f6caf', '#a78bfa',
-  '#f06595', '#f78fb3', '#b8e986', '#f4a261',
+export const ATTRIBUTE_NAMES = ['Energia','Minerais','Água','População','Cultura','Ciência','Comércio','Influência','Saúde','Impostos','Poluição','Barulho','Crime','Congestionamento','Desemprego','Custo de manutenção','Risco de enchente','Desigualdade'];
+export const BAD_ATTRIBUTES = new Set(['Poluição','Barulho','Crime','Congestionamento','Desemprego','Custo de manutenção','Risco de enchente','Desigualdade']);
+export const FOOTPRINTS = {
+  'Estação de tratamento de água':[2,2], 'Parque urbano':[2,2], 'Usina de energia':[2,2],
+  'Hospital municipal':[2,2], 'Centro cultural':[2,1], 'Colégio municipal':[2,2],
+  'Zona residencial':[2,2], 'Distrito comercial':[2,1], 'Centro de pesquisa':[2,2],
+  'Delegacia':[1,1], 'Fábrica industrial':[3,2]
+};
+const TYPES = [
+{name:'Estação de tratamento de água',color:'#45aaf2',price:22,values:{'Água':[7,12],'Saúde':[3,7],'Energia':[-2,-1],'Poluição':[-3,0],'Custo de manutenção':[1,3],'Risco de enchente':[-2,0]}},
+{name:'Parque urbano',color:'#b8e986',price:18,values:{'Saúde':[2,6],'Cultura':[1,4],'Poluição':[-4,-1],'Barulho':[-3,0],'Influência':[1,3],'Risco de enchente':[-3,-1]}},
+{name:'Usina de energia',color:'#ffd166',price:35,values:{'Energia':[7,12],'Comércio':[1,4],'Impostos':[2,5],'Poluição':[2,7],'Barulho':[1,4],'Custo de manutenção':[2,5]}},
+{name:'Hospital municipal',color:'#4ecdc4',price:40,values:{'Saúde':[7,12],'População':[1,4],'Energia':[-2,0],'Crime':[-2,0],'Custo de manutenção':[2,5],'Congestionamento':[1,3]}},
+{name:'Centro cultural',color:'#a78bfa',price:24,values:{'Cultura':[6,11],'Influência':[2,6],'População':[1,3],'Impostos':[1,3],'Barulho':[1,3],'Desigualdade':[0,2]}},
+{name:'Colégio municipal',color:'#f4c95d',price:28,values:{'Ciência':[3,7],'Cultura':[2,5],'População':[1,4],'Saúde':[1,3],'Desigualdade':[-3,-1],'Desemprego':[-2,0]}},
+{name:'Zona residencial',color:'#f06595',price:20,values:{'População':[5,10],'Saúde':[1,4],'Comércio':[1,3],'Impostos':[2,5],'Congestionamento':[2,5],'Desigualdade':[1,4]}},
+{name:'Distrito comercial',color:'#ff9f43',price:32,values:{'Comércio':[6,12],'População':[2,5],'Impostos':[5,10],'Barulho':[2,5],'Congestionamento':[2,6],'Desigualdade':[1,3]}},
+{name:'Centro de pesquisa',color:'#5f6caf',price:36,values:{'Ciência':[6,12],'Influência':[1,4],'Energia':[-2,0],'Impostos':[1,4],'Custo de manutenção':[2,5],'Desemprego':[-1,1]}},
+{name:'Delegacia',color:'#45aaf2',price:30,values:{'Crime':[-6,-2],'Saúde':[1,3],'Influência':[2,5],'Impostos':[1,3],'Barulho':[1,3],'Custo de manutenção':[2,4]}},
+{name:'Fábrica industrial',color:'#ff6b6b',price:38,values:{'Minerais':[4,10],'Comércio':[2,5],'Energia':[-2,1],'Impostos':[4,9],'Poluição':[4,10],'Barulho':[4,9]}}
 ];
-
-function randomColor() {
-  return PALETTE[Math.floor(Math.random() * PALETTE.length)];
-}
-
-/**
- * Model: estado e regras do jogo, sem dependência de DOM ou plataforma.
- */
+const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const slug=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+function createPiece(typeOverride=null){const type=typeOverride||TYPES[rand(0,TYPES.length-1)];const names=Object.keys(type.values);const selected=[...names].sort(()=>Math.random()-.5).slice(0,Math.min(6,names.length));const attributes=Object.fromEntries(ATTRIBUTE_NAMES.map(n=>[n,0]));for(const n of selected){const [a,b]=type.values[n];attributes[n]=rand(a,b)}const id=slug(type.name);const descriptions={'estacao-de-tratamento-de-agua':'Fornece água tratada e melhora a saúde pública.','parque-urbano':'Área verde que melhora a qualidade de vida.','usina-de-energia':'Gera energia para a cidade, mas causa impactos.','hospital-municipal':'Cuida da população e fortalece a saúde.','centro-cultural':'Promove cultura, identidade e influência.','colegio-municipal':'Educação pública para formar uma cidade melhor.','zona-residencial':'Abriga moradores e amplia a vida urbana.','distrito-comercial':'Movimenta o comércio e arrecada impostos.','centro-de-pesquisa':'Produz conhecimento e inovação.','delegacia':'Ajuda a reduzir a criminalidade.','fabrica-industrial':'Produz materiais e empregos, com impacto ambiental.'};const [width,height]=FOOTPRINTS[type.name];return {id,name:type.name,description:descriptions[id]||'Uma construção para desenvolver a cidade.',color:type.color,price:type.price,footprint:{width,height},attributes};}
 export class GameModel {
-  constructor({ columns = 30, rows = 30 } = {}) {
-    this.columns = columns;
-    this.rows = rows;
-    this.placedBlocks = new Map();
-    this.hoveredCell = null;
-    this.nextColor = randomColor();
-  }
-
-  setHoveredCell(cell) {
-    this.hoveredCell = cell;
-  }
-
-  placeBlock(cell) {
-    if (!cell || cell.col < 0 || cell.col >= this.columns || cell.row < 0 || cell.row >= this.rows) {
-      return false;
-    }
-
-    const key = this.cellKey(cell.col, cell.row);
-    if (this.placedBlocks.has(key)) return false;
-
-    this.placedBlocks.set(key, {
-      col: cell.col,
-      row: cell.row,
-      color: this.nextColor,
-    });
-    this.nextColor = randomColor();
-    return true;
-  }
-
-  cellKey(col, row) {
-    return `${col}:${row}`;
-  }
-
-  getState() {
-    return {
-      columns: this.columns,
-      rows: this.rows,
-      blocks: [...this.placedBlocks.values()],
-      hoveredCell: this.hoveredCell,
-      nextColor: this.nextColor,
-      placedCount: this.placedBlocks.size,
-    };
-  }
+ constructor(){this.placedBlocks=new Map();this.pieces=[];this.nextInstanceId=1;this.hoveredCell=null;this.turn=1;this.money=100;this.selectedPiece=null;this.placedThisTurn=false;this.lastTurnSummary=null;this.offers=this.makeOffers();this.offersVisible=true;this.placeBlock({col:0,row:0},true);}
+ makeOffers(){const available=[...TYPES];const offers=[];while(offers.length<2&&available.length){const index=rand(0,available.length-1);offers.push(createPiece(available.splice(index,1)[0]));}return offers}
+ cellKey(col,row){return `${col}:${row}`}
+ getBlock(col,row){return this.placedBlocks.get(this.cellKey(col,row))||null}
+ footprintCells(cell,piece){const w=piece?.footprint?.width||1,h=piece?.footprint?.height||1;const cells=[];for(let dx=0;dx<w;dx++)for(let dy=0;dy<h;dy++)cells.push({col:cell.col+dx,row:cell.row+dy});return cells}
+ isValidCell(cell,piece=this.selectedPiece){if(!cell||!Number.isInteger(cell.col)||!Number.isInteger(cell.row))return false;const cells=this.footprintCells(cell,piece);if(cells.some(c=>this.getBlock(c.col,c.row)))return false;if(!this.pieces.length)return true;const occupied=new Set(this.placedBlocks.keys());return cells.some(c=>[[1,0],[-1,0],[0,1],[0,-1]].some(([dx,dy])=>occupied.has(this.cellKey(c.col+dx,c.row+dy))));}
+ setHoveredCell(cell){this.hoveredCell=cell&&(this.getBlock(cell.col,cell.row)||this.isValidCell(cell))?cell:null}
+ choosePiece(index){const piece=this.offers[index];if(!piece||this.money<piece.price||this.selectedPiece||this.placedThisTurn)return false;this.money-=piece.price;this.selectedPiece={...piece,footprint:{...piece.footprint},attributes:{...piece.attributes}};this.offersVisible=false;return true}
+ toggleOffers(){if(this.selectedPiece||this.placedThisTurn)return false;this.offersVisible=!this.offersVisible;return true}
+ placeBlock(cell,initial=false){if(!cell||!Number.isInteger(cell.col)||!Number.isInteger(cell.row))return false;const piece=initial?createPiece():this.selectedPiece;if(!piece||!this.isValidCell(cell,piece))return false;const instanceId=this.nextInstanceId++;const cells=this.footprintCells(cell,piece);const placed={...piece,instanceId,col:cell.col,row:cell.row,cells,footprint:{...piece.footprint},attributes:{...piece.attributes}};this.pieces.push(placed);for(const c of cells)this.placedBlocks.set(this.cellKey(c.col,c.row),{instanceId,piece:placed,col:c.col,row:c.row});if(!initial){this.selectedPiece=null;this.offersVisible=false;this.placedThisTurn=true;}return true}
+ nextTurn(){if(this.selectedPiece)return false;const totals=this.getState().totals;this.lastTurnSummary={...totals};this.turn++;this.money+=Math.max(0,totals['Impostos']);this.offers=this.makeOffers();this.offersVisible=true;this.placedThisTurn=false;return true}
+ getState(){const totals=Object.fromEntries(ATTRIBUTE_NAMES.map(n=>[n,0]));for(const b of this.pieces)for(const n of ATTRIBUTE_NAMES)totals[n]+=b.attributes[n];const hoveredEntry=this.hoveredCell?this.getBlock(this.hoveredCell.col,this.hoveredCell.row):null;return {blocks:this.pieces.map(p=>({...p,cells:p.cells.map(c=>({...c})),footprint:{...p.footprint},attributes:{...p.attributes}})),occupiedCells:[...this.placedBlocks.values()].map(e=>({col:e.col,row:e.row,instanceId:e.instanceId})),hoveredCell:this.hoveredCell,hoveredBlock:hoveredEntry?.piece||null,nextPiece:this.selectedPiece||this.offers[0],selectedPiece:this.selectedPiece,offers:this.offers,offersVisible:this.offersVisible,turn:this.turn,money:this.money,totals,placedCount:this.pieces.length,canPlace:!!this.selectedPiece,placedThisTurn:this.placedThisTurn,lastTurnSummary:this.lastTurnSummary}}
 }

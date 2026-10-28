@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#10151f" />
     <meta name="description" content="Protótipo de jogo web com grid isométrico." />
-    <title>Color Grid — MVP</title>
+    <title>My City Game</title>
   </head>
   <body>
     <main class="app-shell">
@@ -13,7 +13,7 @@
         <div class="start-content">
           <div class="brand-mark" aria-hidden="true">▦</div>
           <p class="eyebrow">PROTÓTIPO INTERATIVO</p>
-          <h1 id="start-title">Color Grid</h1>
+          <h1 id="start-title">My City Game</h1>
           <p class="start-description">Escolha uma célula, posicione seu bloco colorido e construa seu próprio mosaico.</p>
           <button id="start-button" class="button button-primary button-large" type="button">Iniciar jogo <span aria-hidden="true">→</span></button>
           <p class="start-hint">Use o mouse para escolher onde colocar cada bloco.</p>
@@ -28,31 +28,21 @@
       </section>
 
       <section id="game-screen" class="screen game-screen hidden" aria-label="Área do jogo">
-        <header class="game-header">
-          <div class="game-brand">
-            <button id="home-button" class="icon-button" type="button" aria-label="Voltar à tela inicial">←</button>
-            <div>
-              <p class="eyebrow">COLOR GRID</p>
-              <h1>Monte seu mosaico</h1>
-            </div>
-          </div>
-          <div class="game-stats"><span id="placed-count">0</span><span class="stats-caption">blocos colocados</span></div>
-        </header>
-
         <section class="board-wrap" aria-label="Tabuleiro isométrico">
-          <canvas id="game-canvas" aria-label="Tabuleiro em perspectiva. Mova o mouse para escolher uma célula e clique para colocar o bloco."></canvas>
-          <div class="board-tip"><span class="tip-dot"></span> Passe o mouse sobre uma célula e clique para colocar</div>
+          <canvas id="game-canvas" aria-label="Tabuleiro isométrico infinito. Passe o mouse e clique para posicionar peças."></canvas>
+          <div id="board-hints" class="board-hints" aria-label="Dicas de navegação"><div class="hint-row"><span class="hint-mouse">↔</span><span>Arraste o mapa com o mouse</span></div><div class="hint-row"><span class="hint-mouse">↕</span><span>Scroll para zoom</span></div><div class="hint-row"><span class="hint-mouse">●</span><span>Clique para posicionar a peça</span></div></div>
+          <header class="game-header"><div class="game-brand"><button id="home-button" class="icon-button" type="button" aria-label="Voltar à tela inicial">←</button><div><p class="eyebrow">MY CITY GAME</p><h1>Construa seu mundo</h1></div></div><div class="game-stats"><span class="hud-metric"><b id="money-count">100</b><small>💰 moedas</small></span><span class="hud-metric"><b>👥 <span id="population-count">0</span></b><small>População</small></span><span class="hud-metric"><b>◷ <span id="turn-count">1</span></b><small>Turno</small></span><span class="hud-metric"><b>▦ <span id="placed-count">1</span></b><small>Peças</small></span><div id="world-alerts" class="world-alerts"></div></div></header>
         </section>
-
-        <aside class="next-piece" aria-label="Próximo bloco">
-          <div class="next-piece-copy">
-            <span class="eyebrow">PRÓXIMO BLOCO</span>
-            <strong>Bloco colorido</strong>
-            <span class="next-piece-hint">Clique no tabuleiro para posicionar</span>
-          </div>
-          <div id="next-piece-swatch" class="piece-swatch" aria-label="Cor do próximo bloco"></div>
-        </aside>
-      </section>
+        <section class="dashboard" aria-label="Painéis de informações">
+          <div class="panel future-panel"><button id="next-turn-button" class="button button-primary" type="button">Passar para o próximo turno ›</button><p id="turn-message" aria-live="polite">Posicione a peça escolhida para encerrar o turno.</p><button id="toggle-offers-button" class="button" type="button">Ver escolhas</button></div>
+          <div class="panel totals-panel"><p class="eyebrow">ATRIBUTOS DO MUNDO</p><h2>Soma das peças posicionadas</h2><div id="total-attrs" class="attributes-grid"></div></div>
+          <div class="panel selected-panel"><p class="eyebrow">CÉLULA / PEÇA</p><h2 id="selected-title">Nenhuma célula selecionada</h2><div class="selected-piece-layout"><div id="selected-art" class="illustration-frame"></div><div id="selected-attrs" class="attributes-grid"></div></div></div>
+          <div id="next-panel" class="panel next-panel glossary-panel"><p class="eyebrow">CONHECIMENTO DA CIDADE</p><div class="glossary-mark" aria-hidden="true">📚</div><p class="next-piece-hint">Consulte construções, custos e efeitos dos atributos.</p><button id="glossary-button" class="button button-primary" type="button">Abrir glossário</button></div>
+        </section>
+        <div id="offer-overlay" class="offer-overlay" role="dialog" aria-modal="true" aria-labelledby="offer-title">
+          <div class="offer-window"><div class="turn-pill">Turno <strong id="offer-turn">1</strong></div><button id="hide-offers-button" class="close-offers" type="button" aria-label="Fechar escolhas">×</button><p class="eyebrow">MERCADO DE CONSTRUÇÕES</p><h2 id="offer-title">Escolha uma construção</h2><p class="offer-subtitle">Selecione uma das duas opções para adicionar à sua cidade. Cada opção é única.</p><div id="offer-cards" class="offer-cards"></div><p class="offer-footnote">Você pode fechar esta janela para explorar o mapa e voltar às escolhas.</p></div>
+        </div>
+      <div id="glossary-overlay" class="offer-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="glossary-title"><div class="offer-window glossary-window"><button id="close-glossary-button" class="close-offers" type="button" aria-label="Fechar glossário">×</button><p class="eyebrow">GUIA DA CIDADE</p><h2 id="glossary-title">Glossário de construções</h2><p class="offer-subtitle">Conheça as construções disponíveis e seus impactos na cidade.</p><div id="glossary-cards" class="glossary-cards"></div></div></div></section>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>
